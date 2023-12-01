@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BiensImmobiliersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route(path: '/biens-immobiliers' )]    
 #[ORM\Entity(repositoryClass: BiensImmobiliersRepository::class)]
-#[ApiResource]
+#[ApiResource()]
 class BiensImmobiliers
 {
     #[ORM\Id]
