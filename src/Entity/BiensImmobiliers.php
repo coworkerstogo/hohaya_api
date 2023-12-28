@@ -6,61 +6,86 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BiensImmobiliersRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[Route(path: '/biens-immobiliers' )]    
 #[ORM\Entity(repositoryClass: BiensImmobiliersRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    itemOperations: [
+        'put',
+        'delete',
+        'get' => [
+            'normalization_context' => ['groups' => ['read:bien']]
+        ]
+    ],
+    normalizationContext: ['groups' => ['read:bien']]
+)]
 class BiensImmobiliers
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:bien'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:bien'])]
     private $ville;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:bien'])]
     private $quartier;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:bien'])]
     private $nbChambre;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['read:bien'])]
     private $nbSalleDeBaim;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['read:bien'])]
     private $superficie;
 
     #[ORM\Column(type: 'text')]
+    #[Groups(['read:bien'])]
     private $description;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:bien'])]
     private $prix;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['read:bien'])]
     private $nbCoLocataire;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Groups(['read:bien'])]
     private $proprioExiste;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:bien'])]
     private $caution;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(['read:bien'])]
     private $avance;
 
     #[ORM\Column(type: 'datetime')]
+    #[Groups(['read:bien'])]
     private $postDate;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['read:bien'])]
     private $etat;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private $GetAt;
+    #[Groups(['read:bien'])]
+    private $getAt;
 
-    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'biensImmobiliers')]
-    private $idGetMan;
+    #[ORM\ManyToOne(inversedBy: 'biensImmobiliers')]
+    private ?User $user = null;
+
 
     public function getId(): ?int
     {
@@ -225,24 +250,24 @@ class BiensImmobiliers
 
     public function getGetAt(): ?\DateTimeInterface
     {
-        return $this->GetAt;
+        return $this->getAt;
     }
 
-    public function setGetAt(?\DateTimeInterface $GetAt): self
+    public function setGetAt(?\DateTimeInterface $getAt): self
     {
-        $this->GetAt = $GetAt;
+        $this->getAt = $getAt;
 
         return $this;
     }
 
-    public function getIdGetMan(): ?Users
+    public function getUser(): ?User
     {
-        return $this->idGetMan;
+        return $this->user;
     }
 
-    public function setIdGetMan(?Users $idGetMan): self
+    public function setUser(?User $user): static
     {
-        $this->idGetMan = $idGetMan;
+        $this->user = $user;
 
         return $this;
     }
